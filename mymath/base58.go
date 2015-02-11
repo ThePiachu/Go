@@ -98,6 +98,16 @@ func Base582Hex(b string) []byte {
 	return Base58(b).ToHex()
 }
 
+//convert base58 to hex byte string
+func Base582HexString(b string) string {
+	return Hex2String(Base58(b).ToHex())
+}
+
+//convert base58 to hex byte string
+func Base582HexStr(b string) string {
+	return Base582HexString(b)
+}
+
 //convert base58 to hexes used by Bitcoins (keeping the zeroes on the front, 25 bytes long)
 func (b Base58) BitHex() []byte {
 	value := b.ToBig() //convert to big.Int

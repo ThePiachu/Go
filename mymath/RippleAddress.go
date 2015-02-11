@@ -78,6 +78,25 @@ func GenerateBase58CheckString(baseHex string, leadingByte string) string {
 	return Hex2Str(base)
 }
 
+func SeedHexToSeed(hex string) string {
+	base := string(StrHex2Base58(GenerateBase58CheckString(hex, "21")))
+	return StandardAddressToRippleAddress(base)
+}
+
+func SeedToSeedHexString(seed string) string {
+	standard:=RippleAddressToStandardAddress(seed)
+	hexSeed:=Base582HexStr(standard)
+	if len(hexSeed)!= 42 {
+		return ""
+	}
+	return hexSeed[2:34]
+}
+
+func SeedToSeedHex(seed string) []byte {
+	hex:=SeedToSeedHexString(seed)
+	return Str2Hex(hex)
+}
+
 func GenerateNewRippleAddress() RippleAddress {
 	address := RippleAddress{}
 	//address.MasterSeedHex="71ED064155FFADFA38782C5E0158CB26"
