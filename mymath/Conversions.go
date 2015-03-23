@@ -114,6 +114,10 @@ func Str2Float(s string) float64 {
 	return String2Float(s)
 }
 
+func Str2Float64(s string) float64 {
+	return String2Float(s)
+}
+
 func Float2CurrencyString(f float64) string {
 	return Float2CurrencyStr(f)
 }

@@ -238,3 +238,9 @@ func MD5(b []byte) []byte {
 
 	return h.Sum(nil) //return
 }
+
+func MD5String(s string) string {
+	b := Str2Hex(s)
+	md5 := MD5(b)
+	return Hex2Str(md5)
+}
