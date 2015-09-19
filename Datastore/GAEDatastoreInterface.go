@@ -117,6 +117,11 @@ func QueryGetAllKeysWithFilterLimitAndOrder(c appengine.Context, kind string, fi
 	return q.GetAll(c, dst)
 }
 
+func QueryGetAllKeysWithFilterLimitOffsetAndOrder(c appengine.Context, kind string, filterStr string, filterValue interface{}, limit int, offset int, orderStr string, dst interface{}) ([]*datastore.Key, error) {
+	q := datastore.NewQuery(kind).Filter(filterStr, filterValue).Limit(limit).Offset(offset).Order(orderStr).KeysOnly()
+	return q.GetAll(c, dst)
+}
+
 func QueryGetAllKeysWithFilter(c appengine.Context, kind string, filterStr string, filterValue interface{}, dst interface{}) []*datastore.Key {
 	return QueryGetAllKeysWithFilterAndLimit(c, kind, filterStr, filterValue, -1, dst)
 }
