@@ -18,14 +18,14 @@ func (a Alphabetic) Swap(i, j int) {
 }
 func (a Alphabetic) Less(i, j int) bool {
 	var max int
-	if len(a[i])<len(a[j]) {
+	if len(a[i]) < len(a[j]) {
 		max = len(a[i])
 	} else {
 		max = len(a[j])
 	}
-	for k:=0;k<max;k++ {
-		if a[i][k]!=a[j][k] {
-			return a[i][k]<a[j][k]
+	for k := 0; k < max; k++ {
+		if a[i][k] != a[j][k] {
+			return a[i][k] < a[j][k]
 		}
 	}
 	return len(a[i]) < len(a[j])

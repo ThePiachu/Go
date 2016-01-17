@@ -161,12 +161,23 @@ func ClearNamespace(c appengine.Context, kind string) error {
 		return err
 	}
 
-	err = datastore.DeleteMulti(c, keys)
-
-	if err != nil {
-		Log.Errorf(c, "ClearNamespace - %v", err)
+	for {
+		toDelete := keys[:]
+		if len(keys) > 500 {
+			toDelete = keys[:500]
+			keys = keys[500:]
+		}
+		err = datastore.DeleteMulti(c, toDelete)
+		if err != nil {
+			Log.Errorf(c, "ClearNamespace - %v", err)
+			return err
+		}
+		if len(keys) < 500 {
+			break
+		}
 	}
-	return err
+
+	return nil
 }
 
 func DeleteFromDatastoreFull(c appengine.Context, kind, stringID string, intID int64, parent *datastore.Key) error {

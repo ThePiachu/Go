@@ -77,6 +77,15 @@ func String2Int64(s string) int64 {
 	return answer
 }
 
+func HexIntStr2Dec(s string) *inf.Dec {
+	return HexIntString2Dec(s)
+}
+
+func HexIntString2Dec(s string) *inf.Dec {
+	b := Str2BigBase(s, 16)
+	return String2Dec(b.String())
+}
+
 func String2Dec(s string) *inf.Dec {
 	answer, ok := new(inf.Dec).SetString(s)
 	if !ok {
@@ -123,28 +132,28 @@ func Float2CurrencyString(f float64) string {
 }
 
 func Float2CurrencyStr(f float64) string {
-	number:=Float2Str(f)
-	parts:=SplitStrings(number, ".")
+	number := Float2Str(f)
+	parts := SplitStrings(number, ".")
 	if len(parts) == 0 {
 		return number
 	}
-	whole:=parts[0]
-	decimal:=""
-	if len(parts)>1 {
+	whole := parts[0]
+	decimal := ""
+	if len(parts) > 1 {
 		decimal = parts[1]
 	}
-	length:=len(whole)
-	answer:=""
-	for k:=range(whole) {
-		answer = answer+string(whole[k])
-		if ((length-k-1)%3==0) {
-			if (length-k-1)!=0{
-				answer = answer+"'"
+	length := len(whole)
+	answer := ""
+	for k := range whole {
+		answer = answer + string(whole[k])
+		if (length-k-1)%3 == 0 {
+			if (length - k - 1) != 0 {
+				answer = answer + "'"
 			}
 		}
 	}
-	if decimal!="" {
-		answer = answer+"."+decimal
+	if decimal != "" {
+		answer = answer + "." + decimal
 	}
 	return answer
 }

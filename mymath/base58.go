@@ -31,8 +31,8 @@ var BitcoinRevAlp = map[string]int{
 }
 
 func IsBase58StringValid(toCheck string) bool {
-	for i:=range(toCheck) {
-		_, ok:=BitcoinRevAlp[string(toCheck[i])]
+	for i := range toCheck {
+		_, ok := BitcoinRevAlp[string(toCheck[i])]
 		if ok == false {
 			return false
 		}

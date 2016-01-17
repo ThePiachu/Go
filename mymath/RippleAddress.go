@@ -84,16 +84,16 @@ func SeedHexToSeed(hex string) string {
 }
 
 func SeedToSeedHexString(seed string) string {
-	standard:=RippleAddressToStandardAddress(seed)
-	hexSeed:=Base582HexStr(standard)
-	if len(hexSeed)!= 42 {
+	standard := RippleAddressToStandardAddress(seed)
+	hexSeed := Base582HexStr(standard)
+	if len(hexSeed) != 42 {
 		return ""
 	}
 	return hexSeed[2:34]
 }
 
 func SeedToSeedHex(seed string) []byte {
-	hex:=SeedToSeedHexString(seed)
+	hex := SeedToSeedHexString(seed)
 	return Str2Hex(hex)
 }
 

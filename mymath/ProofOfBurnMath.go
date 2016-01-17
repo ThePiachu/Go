@@ -16,14 +16,14 @@ func GenerateProofOfBurnAddress(addressRoot string, padding byte) (string, error
 		return "", errors.New("Invalid character in input")
 	}
 
-	answer:=addressRoot
-	hash:=Base582Hex(answer)
-	if len(hash)>26 {
+	answer := addressRoot
+	hash := Base582Hex(answer)
+	if len(hash) > 26 {
 		return "", errors.New("Input too long")
 	}
-	if len(hash)!=25 {
+	if len(hash) != 25 {
 		for len(hash) < 25 {
-			answer = answer+string(padding)
+			answer = answer + string(padding)
 			hash = Base582Hex(answer)
 		}
 	}

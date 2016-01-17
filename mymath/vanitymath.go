@@ -333,7 +333,15 @@ func PrivateKeyToUncompressedPublicKey(privateKey string) string {
 	if err != nil {
 		return ""
 	}
-	publicKey := append(append([]byte{0x04}, Big2Hex(priv.PublicKey.X)...), Big2Hex(priv.PublicKey.Y)...)
+	x := Big2Hex(priv.PublicKey.X)
+	for len(x) < 32 {
+		x = append([]byte{0x00}, x...)
+	}
+	y := Big2Hex(priv.PublicKey.Y)
+	for len(y) < 32 {
+		y = append([]byte{0x00}, y...)
+	}
+	publicKey := append(append([]byte{0x04}, x...), y...)
 	return Hex2Str(publicKey)
 }
 

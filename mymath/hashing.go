@@ -8,6 +8,7 @@ package mymath
 
 //TODO: update this file to the other reposiroty? Added a new function, but don't know if it is useful
 import (
+	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
@@ -243,4 +244,11 @@ func MD5String(s string) string {
 	b := Str2Hex(s)
 	md5 := MD5(b)
 	return Hex2Str(md5)
+}
+
+func HMACSHA512(key, data []byte) []byte {
+	//As used by Just-dice
+	h := hmac.New(sha512.New, key)
+	h.Write(data)
+	return h.Sum(nil)
 }

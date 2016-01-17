@@ -20,10 +20,10 @@ func init() {
 	gob.Register([]interface{}{})
 }
 
-func PutInMemcache(c appengine.Context, key string, toStore interface{}) {
+func PutInMemcache(c appengine.Context, key string, toStore interface{}) error {
 	if !capability.Enabled(c, "memcache", "*") {
 		Log.Errorf(c, "PutInMemcache - Memcache not available.")
-		return
+		return nil
 	}
 	var data bytes.Buffer
 
@@ -32,7 +32,7 @@ func PutInMemcache(c appengine.Context, key string, toStore interface{}) {
 	err := enc.Encode(toStore)
 	if err != nil {
 		Log.Errorf(c, "PutInMemcache error for key %s - %s", key, err)
-		return
+		return err
 	}
 
 	item := &memcache.Item{
@@ -42,6 +42,7 @@ func PutInMemcache(c appengine.Context, key string, toStore interface{}) {
 	if err := memcache.Set(c, item); err != nil {
 		Log.Errorf(c, "PutInMemcache - %s", err)
 	}
+	return err
 }
 
 func GetFromMemcache(c appengine.Context, key string, dst interface{}) interface{} {
