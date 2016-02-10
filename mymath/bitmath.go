@@ -18,6 +18,26 @@ import (
 
 //Bitcoin-related math
 
+
+func Satoshi2Coin(satoshi int64) float64 {
+	f := Int2Float(satoshi)
+	f = f / 100000000.0
+	return f
+}
+
+func Coin2Satoshi(coin float64) int64 {
+	var amount int64
+	tempVal := 1e8 * coin
+	if tempVal < 0 {
+		tempVal = tempVal - 0.5
+	}
+	if tempVal > 0 {
+		tempVal = tempVal + 0.5
+	}
+	amount = int64(tempVal)
+	return amount
+}
+
 //TODO: test and add to tests
 func CalculateBitMidstate(data []byte) []byte {
 	var h BitSHA.Hash = BitSHA.New()
