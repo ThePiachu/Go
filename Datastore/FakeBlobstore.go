@@ -33,22 +33,24 @@ func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore inte
 		return err
 	}
 
-	err = datastore.RunInTransaction(c, func(c appengine.Context) error {
-		for i:=0;;i++ {
-			f:=new(FakeBlobstoreData)
-			f.Data = data.Next(MaxDataToStore)
-			id:=makeFakeBlobstoreID(kind, stringID, i)
-			_, err:=PutInDatastoreSimple(c, FakeBlobstoreBucket, id, f)
-			if err!=nil {
-				Log.Errorf(c, "PutInFakeBlobstore - %v", err)
-				return err
-			}
-			if data.Len()==0 {
-				break
-			}
+	toSave:=make([]*FakeBlobstoreData, 0, data.Len()/MaxDataToStore+1)
+	keys:=make([]*datastore.Key, 0, data.Len()/MaxDataToStore+1)
+
+	for i:=0;;i++ {
+		f:=new(FakeBlobstoreData)
+		f.Data = data.Next(MaxDataToStore)
+		id:=makeFakeBlobstoreID(kind, stringID, i)
+		
+		k := datastore.NewKey(c, FakeBlobstoreBucket, id, 0, nil)
+		toSave = append(toSave, f)
+		keys = append(keys, k)
+
+		if data.Len()==0 {
+			break
 		}
-		return nil
-    }, &datastore.TransactionOptions{XG: true})
+	}
+
+	_, err = datastore.PutMulti(c, keys, toSave)
 
 	if err!=nil {
 		Log.Errorf(c, "PutInFakeBlobstore - %v", err)
