@@ -6,11 +6,13 @@ package mymath
 
 import (
 	"crypto/rand"
-	"github.com/ThePiachu/Go/mymath/bitecdsa"
-	"github.com/ThePiachu/Go/mymath/bitelliptic"
 	"log"
 	"math"
+	"fmt"
 	"math/big"
+	
+	"github.com/ThePiachu/Go/mymath/bitecdsa"
+	"github.com/ThePiachu/Go/mymath/bitelliptic"
 )
 
 func VanityAddressLavishness(pattern string, bounty float64) float64 {
@@ -320,6 +322,24 @@ func NewRandomPrivateKey() string {
 	curve := bitelliptic.S256()
 	priv, _, _, _ := curve.GenerateKey(rand.Reader)
 	return Hex2Str(priv)
+}
+
+func PrivateKeyToCompressedAddressBytes(net byte, privateKey []byte) string {
+	return PrivateKeyToCompressedAddress(fmt.Sprintf("%x", net), fmt.Sprintf("%x", privateKey))
+}
+
+func PrivateKeyToUncompressedAddressBytes(net byte, privateKey []byte) string {
+	return PrivateKeyToUncompressedAddress(fmt.Sprintf("%x", net), fmt.Sprintf("%x", privateKey))
+}
+
+func PrivateKeyToCompressedAddress(net string, privateKey string) string {
+	pub:=PrivateKeyToCompressedPublicKey(privateKey)
+	return PublicKeyToAddress(net, pub)
+}
+
+func PrivateKeyToUncompressedAddress(net string, privateKey string) string {
+	pub:=PrivateKeyToUncompressedPublicKey(privateKey)
+	return PublicKeyToAddress(net, pub)
 }
 
 func PrivateKeyToCompressedPublicKey(privateKey string) string {
