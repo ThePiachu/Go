@@ -5,7 +5,6 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine"
 	"appengine/capability"
 	"appengine/datastore"
 	"appengine/memcache"
@@ -13,6 +12,7 @@ import (
 	"encoding/gob"
 	"errors"
 	"github.com/ThePiachu/Go/Log"
+	"google.golang.org/appengine"
 )
 
 func init() {

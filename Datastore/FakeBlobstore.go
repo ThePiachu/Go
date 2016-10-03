@@ -5,11 +5,11 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine"
 	"appengine/datastore"
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"google.golang.org/appengine"
 
 	"github.com/ThePiachu/Go/Log"
 )
@@ -22,7 +22,7 @@ type FakeBlobstoreData struct {
 
 const MaxDataToStore int = 1000000 //<2**20 to fit into datastore
 
-func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore interface{}) (error) {
+func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore interface{}) error {
 	var data bytes.Buffer
 
 	enc := gob.NewEncoder(&data)
@@ -34,23 +34,23 @@ func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore inte
 	}
 
 	err = datastore.RunInTransaction(c, func(c appengine.Context) error {
-		for i:=0;;i++ {
-			f:=new(FakeBlobstoreData)
+		for i := 0; ; i++ {
+			f := new(FakeBlobstoreData)
 			f.Data = data.Next(MaxDataToStore)
-			id:=makeFakeBlobstoreID(kind, stringID, i)
-			_, err:=PutInDatastoreSimple(c, FakeBlobstoreBucket, id, f)
-			if err!=nil {
+			id := makeFakeBlobstoreID(kind, stringID, i)
+			_, err := PutInDatastoreSimple(c, FakeBlobstoreBucket, id, f)
+			if err != nil {
 				Log.Errorf(c, "PutInFakeBlobstore - %v", err)
 				return err
 			}
-			if data.Len()==0 {
+			if data.Len() == 0 {
 				break
 			}
 		}
 		return nil
-    }, &datastore.TransactionOptions{XG: true})
+	}, &datastore.TransactionOptions{XG: true})
 
-	if err!=nil {
+	if err != nil {
 		Log.Errorf(c, "PutInFakeBlobstore - %v", err)
 		return err
 	}
@@ -58,14 +58,14 @@ func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore inte
 	return nil
 }
 
-func GetFromFakeBlobstore(c appengine.Context, kind, stringID string, dst interface{}) (error) {
-	data:=bytes.NewBuffer(nil)
-	for i:=0;;i++ {
-		id:=makeFakeBlobstoreID(kind, stringID, i)
-		tmp:=new(FakeBlobstoreData)
-		err:=GetFromDatastoreSimple(c, FakeBlobstoreBucket, id, tmp)
-		if err!=nil {
-			if err==datastore.ErrNoSuchEntity {
+func GetFromFakeBlobstore(c appengine.Context, kind, stringID string, dst interface{}) error {
+	data := bytes.NewBuffer(nil)
+	for i := 0; ; i++ {
+		id := makeFakeBlobstoreID(kind, stringID, i)
+		tmp := new(FakeBlobstoreData)
+		err := GetFromDatastoreSimple(c, FakeBlobstoreBucket, id, tmp)
+		if err != nil {
+			if err == datastore.ErrNoSuchEntity {
 				break
 			}
 			Log.Errorf(c, "GetFromFakeBlobstore - %v", err)
@@ -76,7 +76,7 @@ func GetFromFakeBlobstore(c appengine.Context, kind, stringID string, dst interf
 			Log.Errorf(c, "GetFromFakeBlobstore - %s", err)
 			return err
 		}
-		if len(tmp.Data)<MaxDataToStore {
+		if len(tmp.Data) < MaxDataToStore {
 			break
 		}
 	}

@@ -5,11 +5,11 @@ package mymath
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine"
 	"crypto/rand"
 	"github.com/ThePiachu/Go/Log"
 	"github.com/ThePiachu/Go/mymath/bitecdsa"
 	"github.com/ThePiachu/Go/mymath/bitelliptic"
+	"golang.org/x/net/context"
 )
 
 type CoinAddress struct {
@@ -51,7 +51,7 @@ func GenerateNewCoinAddress(netByte string) CoinAddress {
 	return address
 }
 
-func GenerateUncompressedCoinVanityAddressWithNetbyte(c appengine.Context, pattern string, netbyte string) CoinAddress {
+func GenerateUncompressedCoinVanityAddressWithNetbyte(c context.Context, pattern string, netbyte string) CoinAddress {
 	subpattern := pattern[0 : len(pattern)-1]
 	Log.Infof(c, "Subpattern - %v", subpattern)
 	Log.Infof(c, "Pattern - %v", pattern)
@@ -72,7 +72,7 @@ func GenerateUncompressedCoinVanityAddressWithNetbyte(c appengine.Context, patte
 	return CoinAddress{}
 }
 
-func GenerateCompressedCoinVanityAddressWithNetbyte(c appengine.Context, pattern string, netbyte string) CoinAddress {
+func GenerateCompressedCoinVanityAddressWithNetbyte(c context.Context, pattern string, netbyte string) CoinAddress {
 	subpattern := pattern[0 : len(pattern)-1]
 	Log.Infof(c, "Subpattern - %v", subpattern)
 	Log.Infof(c, "Pattern - %v", pattern)
@@ -93,7 +93,7 @@ func GenerateCompressedCoinVanityAddressWithNetbyte(c appengine.Context, pattern
 	return CoinAddress{}
 }
 
-func GenerateCoinVanityAddressWithNetbyte(c appengine.Context, pattern string, netbyte string) CoinAddress {
+func GenerateCoinVanityAddressWithNetbyte(c context.Context, pattern string, netbyte string) CoinAddress {
 	subpattern := pattern[0 : len(pattern)-1]
 	Log.Infof(c, "Subpattern - %v", subpattern)
 	Log.Infof(c, "Pattern - %v", pattern)

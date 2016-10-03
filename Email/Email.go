@@ -5,9 +5,9 @@ package Email
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine"
 	"appengine/mail"
 	"github.com/ThePiachu/Go/Log"
+	"google.golang.org/appengine"
 )
 
 func SendHTMLEmail(c appengine.Context, subject string, to []string, sender string, mailBody string) error {

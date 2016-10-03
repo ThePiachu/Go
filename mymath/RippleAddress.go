@@ -5,8 +5,8 @@ package mymath
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine"
 	"github.com/ThePiachu/Go/Log"
+	"golang.org/x/net/context"
 )
 
 var RippleAlphabet = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"
@@ -147,7 +147,7 @@ func GenerateNewRippleAddress() RippleAddress {
 	return address
 }
 
-func GenerateRippleVanityAddress(c appengine.Context, pattern string) RippleAddress {
+func GenerateRippleVanityAddress(c context.Context, pattern string) RippleAddress {
 	subpattern := pattern[0 : len(pattern)-1]
 	Log.Infof(c, "Subpattern - %v", subpattern)
 	Log.Infof(c, "Pattern - %v", pattern)

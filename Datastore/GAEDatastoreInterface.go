@@ -5,9 +5,9 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine"
 	"appengine/datastore"
 	"github.com/ThePiachu/Go/Log"
+	"google.golang.org/appengine"
 )
 
 func PutInDatastoreFull(c appengine.Context, kind, stringID string, intID int64, parent *datastore.Key, variable interface{}) (*datastore.Key, error) {
