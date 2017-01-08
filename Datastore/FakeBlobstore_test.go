@@ -5,10 +5,10 @@ package Datastore_test
 // license that can be found in the LICENSE file.
 
 import (
-	"testing"
 	"appengine/aetest"
 	"crypto/rand"
 	"fmt"
+	"testing"
 
 	. "github.com/ThePiachu/Go/Datastore"
 )
@@ -20,13 +20,13 @@ func TestFakeBlobstore(t *testing.T) {
 	}
 	defer c.Close()
 
-    type temp struct {
-    	ToStore string
-    	Blarg int
-    }
-    b:=new(temp)
-    b.Blarg = 100
-    data:=make([]byte, MaxDataToStore*3)
+	type temp struct {
+		ToStore string
+		Blarg   int
+	}
+	b := new(temp)
+	b.Blarg = 100
+	data := make([]byte, MaxDataToStore*3)
 
 	_, err = rand.Read(data)
 	if err != nil {
@@ -34,15 +34,15 @@ func TestFakeBlobstore(t *testing.T) {
 	}
 	b.ToStore = fmt.Sprintf("%x", data)
 
-	id:="id"
-	kind:="kind"
+	id := "id"
+	kind := "kind"
 
 	err = PutInFakeBlobstore(c, kind, id, b)
 	if err != nil {
 		t.Errorf("%v", err)
 	}
 
-	b2:=new(temp)
+	b2 := new(temp)
 
 	err = GetFromFakeBlobstore(c, kind, id, b2)
 	if err != nil {

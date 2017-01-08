@@ -6,11 +6,11 @@ package mymath
 
 import (
 	"crypto/rand"
+	"fmt"
 	"log"
 	"math"
-	"fmt"
 	"math/big"
-	
+
 	"github.com/ThePiachu/Go/mymath/bitecdsa"
 	"github.com/ThePiachu/Go/mymath/bitelliptic"
 )
@@ -333,12 +333,12 @@ func PrivateKeyToUncompressedAddressBytes(net byte, privateKey []byte) string {
 }
 
 func PrivateKeyToCompressedAddress(net string, privateKey string) string {
-	pub:=PrivateKeyToCompressedPublicKey(privateKey)
+	pub := PrivateKeyToCompressedPublicKey(privateKey)
 	return PublicKeyToAddress(net, pub)
 }
 
 func PrivateKeyToUncompressedAddress(net string, privateKey string) string {
-	pub:=PrivateKeyToUncompressedPublicKey(privateKey)
+	pub := PrivateKeyToUncompressedPublicKey(privateKey)
 	return PublicKeyToAddress(net, pub)
 }
 

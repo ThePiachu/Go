@@ -18,7 +18,6 @@ import (
 
 //Bitcoin-related math
 
-
 func Satoshi2Coin(satoshi int64) float64 {
 	f := Int2Float(satoshi)
 	f = f / 100000000.0
