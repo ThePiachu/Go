@@ -5,11 +5,11 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine/datastore"
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine/datastore"
 
 	"github.com/ThePiachu/Go/Log"
 )
@@ -22,7 +22,7 @@ type FakeBlobstoreData struct {
 
 const MaxDataToStore int = 1000000 //<2**20 to fit into datastore
 
-func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore interface{}) error {
+func PutInFakeBlobstore(c context.Context, kind, stringID string, toStore interface{}) error {
 	var data bytes.Buffer
 
 	enc := gob.NewEncoder(&data)
@@ -33,7 +33,7 @@ func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore inte
 		return err
 	}
 
-	err = datastore.RunInTransaction(c, func(c appengine.Context) error {
+	err = datastore.RunInTransaction(c, func(c context.Context) error {
 		for i := 0; ; i++ {
 			f := new(FakeBlobstoreData)
 			f.Data = data.Next(MaxDataToStore)
@@ -58,7 +58,7 @@ func PutInFakeBlobstore(c appengine.Context, kind, stringID string, toStore inte
 	return nil
 }
 
-func GetFromFakeBlobstore(c appengine.Context, kind, stringID string, dst interface{}) error {
+func GetFromFakeBlobstore(c context.Context, kind, stringID string, dst interface{}) error {
 	data := bytes.NewBuffer(nil)
 	for i := 0; ; i++ {
 		id := makeFakeBlobstoreID(kind, stringID, i)

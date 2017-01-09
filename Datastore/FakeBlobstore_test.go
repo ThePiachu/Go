@@ -5,9 +5,9 @@ package Datastore_test
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine/aetest"
 	"crypto/rand"
 	"fmt"
+	"google.golang.org/appengine/aetest"
 	"testing"
 
 	. "github.com/ThePiachu/Go/Datastore"

@@ -5,14 +5,14 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine/capability"
-	"appengine/datastore"
-	"appengine/memcache"
 	"bytes"
 	"encoding/gob"
 	"errors"
 	"github.com/ThePiachu/Go/Log"
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine/capability"
+	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/memcache"
 )
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 	gob.Register([]interface{}{})
 }
 
-func PutInMemcache(c appengine.Context, key string, toStore interface{}) error {
+func PutInMemcache(c context.Context, key string, toStore interface{}) error {
 	if !capability.Enabled(c, "memcache", "*") {
 		Log.Errorf(c, "PutInMemcache - Memcache not available.")
 		return nil
@@ -45,7 +45,7 @@ func PutInMemcache(c appengine.Context, key string, toStore interface{}) error {
 	return err
 }
 
-func GetFromMemcache(c appengine.Context, key string, dst interface{}) interface{} {
+func GetFromMemcache(c context.Context, key string, dst interface{}) interface{} {
 	if !capability.Enabled(c, "memcache", "*") {
 		Log.Errorf(c, "GetFromMemcache - Memcache not available.")
 		return nil
@@ -69,7 +69,7 @@ func GetFromMemcache(c appengine.Context, key string, dst interface{}) interface
 	return dst
 }
 
-func PutInDatastoreSimpleAndMemcache(c appengine.Context, kind, stringID, memcacheID string, variable interface{}) (*datastore.Key, error) {
+func PutInDatastoreSimpleAndMemcache(c context.Context, kind, stringID, memcacheID string, variable interface{}) (*datastore.Key, error) {
 	if !capability.Enabled(c, "datastore_v3", "*") {
 		Log.Errorf(c, "PutInDatastoreSimpleAndMemcache - Datastore not available.")
 		return nil, errors.New("Datastore not available")
@@ -88,7 +88,7 @@ func PutInDatastoreSimpleAndMemcache(c appengine.Context, kind, stringID, memcac
 	return key, nil
 }
 
-func GetFromDatastoreSimpleOrMemcache(c appengine.Context, kind, stringID, memcacheID string, dst interface{}) error {
+func GetFromDatastoreSimpleOrMemcache(c context.Context, kind, stringID, memcacheID string, dst interface{}) error {
 	if capability.Enabled(c, "memcache", "*") {
 		answer := GetFromMemcache(c, memcacheID, dst)
 		if answer != nil {
@@ -114,7 +114,7 @@ func GetFromDatastoreSimpleOrMemcache(c appengine.Context, kind, stringID, memca
 	return nil
 }
 
-func IsVariableInDatastoreSimpleOrMemcache(c appengine.Context, kind, stringID, memcacheID string, dst interface{}) bool {
+func IsVariableInDatastoreSimpleOrMemcache(c context.Context, kind, stringID, memcacheID string, dst interface{}) bool {
 	_, err := memcache.Get(c, memcacheID)
 	if err == nil {
 		return true
@@ -122,20 +122,20 @@ func IsVariableInDatastoreSimpleOrMemcache(c appengine.Context, kind, stringID, 
 	return IsVariableInDatastoreSimple(c, kind, stringID, dst)
 }
 
-func DeleteFromMemcache(c appengine.Context, memcacheID string) {
+func DeleteFromMemcache(c context.Context, memcacheID string) {
 	memcache.Delete(c, memcacheID)
 }
 
-func DeleteFromDatastoreSimpleAndMemcache(c appengine.Context, kind, stringID, memcacheID string) error {
+func DeleteFromDatastoreSimpleAndMemcache(c context.Context, kind, stringID, memcacheID string) error {
 	DeleteFromMemcache(c, memcacheID)
 	return DeleteFromDatastoreSimple(c, kind, stringID)
 }
 
-func FlushMemcache(c appengine.Context) error {
+func FlushMemcache(c context.Context) error {
 	return memcache.Flush(c)
 }
 
-func ClearNamespaceAndMemcache(c appengine.Context, kind string) error {
+func ClearNamespaceAndMemcache(c context.Context, kind string) error {
 	err := ClearNamespace(c, kind)
 	if err != nil {
 		Log.Errorf(c, "ClearNamespaceAndMemcache - %v", err)
@@ -149,7 +149,7 @@ func ClearNamespaceAndMemcache(c appengine.Context, kind string) error {
 	return nil
 }
 
-func TestMemcache(c appengine.Context) {
+func TestMemcache(c context.Context) {
 	type TMP struct {
 		A string
 		B int

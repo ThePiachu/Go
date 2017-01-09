@@ -5,12 +5,13 @@ package Email
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine/mail"
 	"github.com/ThePiachu/Go/Log"
+	"golang.org/x/net/context"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/mail"
 )
 
-func SendHTMLEmail(c appengine.Context, subject string, to []string, sender string, mailBody string) error {
+func SendHTMLEmail(c context.Context, subject string, to []string, sender string, mailBody string) error {
 	msg := &mail.Message{
 		Sender:   sender,
 		To:       to,
@@ -25,7 +26,7 @@ func SendHTMLEmail(c appengine.Context, subject string, to []string, sender stri
 	return nil
 }
 
-func SendEmail(c appengine.Context, subject string, to []string, sender string, mailBody string) error {
+func SendEmail(c context.Context, subject string, to []string, sender string, mailBody string) error {
 	msg := &mail.Message{
 		Sender:  sender,
 		To:      to,

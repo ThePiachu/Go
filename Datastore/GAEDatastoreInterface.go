@@ -5,44 +5,44 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine/datastore"
 	"github.com/ThePiachu/Go/Log"
-	"google.golang.org/appengine"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine/datastore"
 )
 
-func PutInDatastoreFull(c appengine.Context, kind, stringID string, intID int64, parent *datastore.Key, variable interface{}) (*datastore.Key, error) {
+func PutInDatastoreFull(c context.Context, kind, stringID string, intID int64, parent *datastore.Key, variable interface{}) (*datastore.Key, error) {
 	k := datastore.NewKey(c, kind, stringID, intID, parent)
 	key, err := datastore.Put(c, k, variable)
 	return key, err
 }
 
-func PutInDatastoreSimple(c appengine.Context, kind, stringID string, variable interface{}) (*datastore.Key, error) {
+func PutInDatastoreSimple(c context.Context, kind, stringID string, variable interface{}) (*datastore.Key, error) {
 	return PutInDatastoreFull(c, kind, stringID, 0, nil, variable)
 }
 
-func PutInDatastoreSimpleWithParent(c appengine.Context, kind, stringID string, parent *datastore.Key, variable interface{}) (*datastore.Key, error) {
+func PutInDatastoreSimpleWithParent(c context.Context, kind, stringID string, parent *datastore.Key, variable interface{}) (*datastore.Key, error) {
 	return PutInDatastoreFull(c, kind, stringID, 0, parent, variable)
 }
 
-func PutInDatastore(c appengine.Context, kind string, variable interface{}) (*datastore.Key, error) {
+func PutInDatastore(c context.Context, kind string, variable interface{}) (*datastore.Key, error) {
 	return PutInDatastoreFull(c, kind, "", 0, nil, variable)
 }
 
-func GetFromDatastoreFull(c appengine.Context, kind, stringID string, intID int64, parent *datastore.Key, dst interface{}) error {
+func GetFromDatastoreFull(c context.Context, kind, stringID string, intID int64, parent *datastore.Key, dst interface{}) error {
 	k := datastore.NewKey(c, kind, stringID, intID, parent)
 	return datastore.Get(c, k, dst)
 }
 
-func GetFromDatastoreSimple(c appengine.Context, kind, stringID string, dst interface{}) error {
+func GetFromDatastoreSimple(c context.Context, kind, stringID string, dst interface{}) error {
 	return GetFromDatastoreFull(c, kind, stringID, 0, nil, dst)
 }
 
-func GetFromDatastoreSimpleWithParent(c appengine.Context, kind, stringID string, parent *datastore.Key, dst interface{}) error {
+func GetFromDatastoreSimpleWithParent(c context.Context, kind, stringID string, parent *datastore.Key, dst interface{}) error {
 	return GetFromDatastoreFull(c, kind, stringID, 0, parent, dst)
 }
 
 // A function that either loads a variable from datastore, or if it is not present, sets it and then loads it
-func GetFromDatastoreOrSetDefaultFull(c appengine.Context, kind, stringID string, intID int64, parent *datastore.Key, dst interface{}, def interface{}) error {
+func GetFromDatastoreOrSetDefaultFull(c context.Context, kind, stringID string, intID int64, parent *datastore.Key, dst interface{}, def interface{}) error {
 
 	key := datastore.NewKey(c, kind, stringID, intID, parent)
 	if err := datastore.Get(c, key, dst); err != nil {
@@ -64,11 +64,11 @@ func GetFromDatastoreOrSetDefaultFull(c appengine.Context, kind, stringID string
 	return nil
 }
 
-func GetFromDatastoreOrSetDefaultSimple(c appengine.Context, kind, stringID string, dst interface{}, def interface{}) error {
+func GetFromDatastoreOrSetDefaultSimple(c context.Context, kind, stringID string, dst interface{}, def interface{}) error {
 	return GetFromDatastoreOrSetDefaultFull(c, kind, stringID, 0, nil, dst, def)
 }
 
-func IsVariableInDatastoreSimple(c appengine.Context, kind, stringID string, dst interface{}) bool {
+func IsVariableInDatastoreSimple(c context.Context, kind, stringID string, dst interface{}) bool {
 	err := GetFromDatastoreSimple(c, kind, stringID, dst)
 	if err == nil {
 		return true
@@ -80,53 +80,53 @@ func IsVariableInDatastoreSimple(c appengine.Context, kind, stringID string, dst
 	return false
 }
 
-func QueryGetFirstBy(c appengine.Context, kind string, order string, limit int, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetFirstBy(c context.Context, kind string, order string, limit int, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).Order(order).Limit(limit)
 	return q.GetAll(c, dst)
 }
 
-func QueryGetFirstKeysBy(c appengine.Context, kind string, order string, limit int, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetFirstKeysBy(c context.Context, kind string, order string, limit int, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).Order(order).Limit(limit).KeysOnly()
 	return q.GetAll(c, dst)
 }
-func QueryGetAllWithFilter(c appengine.Context, kind string, filterStr string, filterValue interface{}, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllWithFilter(c context.Context, kind string, filterStr string, filterValue interface{}, dst interface{}) ([]*datastore.Key, error) {
 	return QueryGetAllWithFilterAndLimit(c, kind, filterStr, filterValue, -1, dst)
 }
 
-func QueryGetAllWithFilterAndLimit(c appengine.Context, kind string, filterStr string, filterValue interface{}, limit int, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllWithFilterAndLimit(c context.Context, kind string, filterStr string, filterValue interface{}, limit int, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).Filter(filterStr, filterValue).Limit(limit)
 	return q.GetAll(c, dst)
 }
 
-func QueryGetAllWithLimit(c appengine.Context, kind string, limit int, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllWithLimit(c context.Context, kind string, limit int, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).Limit(limit)
 	return q.GetAll(c, dst)
 }
 
-func QueryGetAll(c appengine.Context, kind string, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAll(c context.Context, kind string, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind)
 	return q.GetAll(c, dst)
 }
 
-func QueryGetAllKeysWithFilterAndOrder(c appengine.Context, kind string, filterStr string, filterValue interface{}, orderStr string, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllKeysWithFilterAndOrder(c context.Context, kind string, filterStr string, filterValue interface{}, orderStr string, dst interface{}) ([]*datastore.Key, error) {
 	return QueryGetAllKeysWithFilterLimitAndOrder(c, kind, filterStr, filterValue, -1, orderStr, dst)
 }
 
-func QueryGetAllKeysWithFilterLimitAndOrder(c appengine.Context, kind string, filterStr string, filterValue interface{}, limit int, orderStr string, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllKeysWithFilterLimitAndOrder(c context.Context, kind string, filterStr string, filterValue interface{}, limit int, orderStr string, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).Filter(filterStr, filterValue).Limit(limit).Order(orderStr).KeysOnly()
 	return q.GetAll(c, dst)
 }
 
-func QueryGetAllKeysWithFilterLimitOffsetAndOrder(c appengine.Context, kind string, filterStr string, filterValue interface{}, limit int, offset int, orderStr string, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllKeysWithFilterLimitOffsetAndOrder(c context.Context, kind string, filterStr string, filterValue interface{}, limit int, offset int, orderStr string, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).Filter(filterStr, filterValue).Limit(limit).Offset(offset).Order(orderStr).KeysOnly()
 	return q.GetAll(c, dst)
 }
 
-func QueryGetAllKeysWithFilter(c appengine.Context, kind string, filterStr string, filterValue interface{}, dst interface{}) []*datastore.Key {
+func QueryGetAllKeysWithFilter(c context.Context, kind string, filterStr string, filterValue interface{}, dst interface{}) []*datastore.Key {
 	return QueryGetAllKeysWithFilterAndLimit(c, kind, filterStr, filterValue, -1, dst)
 }
 
-func QueryGetAllKeysWithFilterAndLimit(c appengine.Context, kind string, filterStr string, filterValue interface{}, limit int, dst interface{}) []*datastore.Key {
+func QueryGetAllKeysWithFilterAndLimit(c context.Context, kind string, filterStr string, filterValue interface{}, limit int, dst interface{}) []*datastore.Key {
 	q := datastore.NewQuery(kind).Filter(filterStr, filterValue).Limit(limit).KeysOnly()
 	keys, err := q.GetAll(c, dst)
 	if err != nil {
@@ -135,12 +135,12 @@ func QueryGetAllKeysWithFilterAndLimit(c appengine.Context, kind string, filterS
 	return keys
 }
 
-func QueryGetAllKeys(c appengine.Context, kind string, dst interface{}) ([]*datastore.Key, error) {
+func QueryGetAllKeys(c context.Context, kind string, dst interface{}) ([]*datastore.Key, error) {
 	q := datastore.NewQuery(kind).KeysOnly()
 	return q.GetAll(c, dst)
 }
 
-func CountQueryWithFilter(c appengine.Context, kind string, filterStr string, filterValue interface{}) int {
+func CountQueryWithFilter(c context.Context, kind string, filterStr string, filterValue interface{}) int {
 	q := datastore.NewQuery(kind).Filter(filterStr, filterValue)
 	count, err := q.Count(c)
 	if err != nil {
@@ -150,7 +150,7 @@ func CountQueryWithFilter(c appengine.Context, kind string, filterStr string, fi
 	return count
 }
 
-func ClearNamespace(c appengine.Context, kind string) error {
+func ClearNamespace(c context.Context, kind string) error {
 	q := datastore.NewQuery(kind)
 	q = q.KeysOnly()
 
@@ -180,12 +180,12 @@ func ClearNamespace(c appengine.Context, kind string) error {
 	return nil
 }
 
-func DeleteFromDatastoreFull(c appengine.Context, kind, stringID string, intID int64, parent *datastore.Key) error {
+func DeleteFromDatastoreFull(c context.Context, kind, stringID string, intID int64, parent *datastore.Key) error {
 	k := datastore.NewKey(c, kind, stringID, intID, parent)
 	return datastore.Delete(c, k)
 }
 
-func DeleteFromDatastoreSimple(c appengine.Context, kind, stringID string) error {
+func DeleteFromDatastoreSimple(c context.Context, kind, stringID string) error {
 	return DeleteFromDatastoreFull(c, kind, stringID, 0, nil)
 }
 

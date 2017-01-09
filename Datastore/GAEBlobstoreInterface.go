@@ -5,15 +5,18 @@ package Datastore
 // license that can be found in the LICENSE file.
 
 import (
-	"appengine/blobstore"
 	"bytes"
 	"encoding/gob"
 	"github.com/ThePiachu/Go/Log"
+	"golang.org/x/net/context"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/blobstore"
 	"io/ioutil"
 )
 
-func PutInBlobstore(c appengine.Context, toStore interface{}) (appengine.BlobKey, error) {
+/*
+//TODO: fix
+func PutInBlobstore(c context.Context, toStore interface{}) (appengine.BlobKey, error) {
 	//TODO: check capabilities
 	var k appengine.BlobKey
 	var data bytes.Buffer
@@ -45,8 +48,8 @@ func PutInBlobstore(c appengine.Context, toStore interface{}) (appengine.BlobKey
 	}
 	return k, err
 }
-
-func GetFromBlobstore(c appengine.Context, blobkey appengine.BlobKey, dst interface{}) (interface{}, error) {
+*/
+func GetFromBlobstore(c context.Context, blobkey appengine.BlobKey, dst interface{}) (interface{}, error) {
 	//TODO: check capabilities
 
 	reader := blobstore.NewReader(c, blobkey)
@@ -64,6 +67,6 @@ func GetFromBlobstore(c appengine.Context, blobkey appengine.BlobKey, dst interf
 	return dst, nil
 }
 
-func DeleteFromBlobstore(c appengine.Context, blobkey appengine.BlobKey) error {
+func DeleteFromBlobstore(c context.Context, blobkey appengine.BlobKey) error {
 	return blobstore.Delete(c, blobkey)
 }
