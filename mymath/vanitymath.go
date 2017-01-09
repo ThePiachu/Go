@@ -15,6 +15,30 @@ import (
 	"github.com/ThePiachu/Go/mymath/bitelliptic"
 )
 
+func IsPublicKeyValid(pubKey string) bool {
+	if pubKey == "" {
+		return false
+	}
+	if len(pubKey) != 130 {
+		return false
+	}
+	if pubKey[0] != '0' || pubKey[1] != '4' {
+		return false
+	}
+
+	a, b := PublicKeyToPointCoordinates(pubKey)
+	if a == nil || b == nil {
+		return false
+	}
+
+	curve := bitelliptic.S256()
+	if !curve.IsOnCurve(a, b) {
+		return false
+	}
+
+	return true
+}
+
 func VanityAddressLavishness(pattern string, bounty float64) float64 {
 	complexity := VanityAddressComplexity(pattern)
 	return CalculateLavishness(bounty, complexity)
