@@ -33,15 +33,23 @@ func AESEncrypt(key string, plaintext string) ([]byte, error) {
 }
 
 func AESDecrypt(key string, ciphertext []byte) (string, error) {
-	block, err := aes.NewCipher([]byte(key))
+	resp, err := AESDecryptBytes([]byte(key), ciphertext)
 	if err != nil {
 		return "", err
+	}
+	return string(resp), nil
+}
+
+func AESDecryptBytes(key []byte, ciphertext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
 	}
 
 	// The IV needs to be unique, but not secure. Therefore it's common to
 	// include it at the beginning of the ciphertext.
 	if len(ciphertext) < aes.BlockSize {
-		return "", errors.New("ciphertext too short")
+		return nil, errors.New("ciphertext too short")
 	}
 	iv := ciphertext[:aes.BlockSize]
 	ciphertext = ciphertext[aes.BlockSize:]
@@ -50,5 +58,37 @@ func AESDecrypt(key string, ciphertext []byte) (string, error) {
 
 	// XORKeyStream can work in-place if the two arguments are the same.
 	stream.XORKeyStream(ciphertext, ciphertext)
-	return string(ciphertext), nil
+	return ciphertext, nil
+}
+
+func AESDecryptBytesCBC(key []byte, ciphertext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	// The IV needs to be unique, but not secure. Therefore it's common to
+	// include it at the beginning of the ciphertext.
+	if len(ciphertext) < aes.BlockSize {
+		return nil, errors.New("ciphertext too short")
+	}
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	mode := cipher.NewCBCDecrypter(block, iv)
+
+	// CryptBlocks can work in-place if the two arguments are the same.
+	mode.CryptBlocks(ciphertext, ciphertext)
+	return ciphertext, nil
+}
+
+func TrimISO10126Padding(b []byte) []byte {
+	if len(b) < 1 {
+		return nil
+	}
+	padLength := int(b[len(b)-1])
+	if len(b) < padLength {
+		return nil
+	}
+	return b[:len(b)-padLength]
 }
