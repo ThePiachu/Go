@@ -9,10 +9,10 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"gopkg.in/inf.v0"
 	"log"
 	"math"
 	"math/big"
-	"speter.net/go/exp/math/dec/inf"
 	"strconv"
 	"strings"
 )
