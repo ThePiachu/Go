@@ -69,3 +69,18 @@ func TestAESEncryptAndDecrypt(t *testing.T) {
 		return
 	}
 }
+
+func TestAESEncryptAndDecryptCBC(t *testing.T) {
+	resp, err := AESEncryptCBC("example key 1234", "test text 1234578901234567890123")
+	if err != nil {
+		t.Fail()
+	}
+	resp2, err := AESDecryptCBC("example key 1234", resp)
+	if err != nil {
+		t.Fail()
+	}
+	if resp2 != "test text 1234578901234567890123" {
+		t.Fail()
+		return
+	}
+}
