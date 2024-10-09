@@ -1,4 +1,4 @@
-package Datastore
+spackage Datastore
 
 // Copyright 2013-2014 ThePiachu. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -10,7 +10,7 @@ import (
 	"github.com/ThePiachu/Go/Log"
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/blobstore"
+	"google.golang.org/appengine/v2/blobstore"
 	"io/ioutil"
 )
 

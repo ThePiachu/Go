@@ -7,7 +7,7 @@ package Datastore
 import (
 	"github.com/ThePiachu/Go/Log"
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/v2/datastore"
 )
 
 func PutInDatastoreFull(c context.Context, kind, stringID string, intID int64, parent *datastore.Key, variable interface{}) (*datastore.Key, error) {

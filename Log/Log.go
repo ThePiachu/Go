@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"golang.org/x/net/context"
 	//"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/v2/log"
 	"runtime"
 	"strconv"
 )

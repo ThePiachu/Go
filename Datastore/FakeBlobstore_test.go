@@ -7,7 +7,7 @@ package Datastore_test
 import (
 	"crypto/rand"
 	"fmt"
-	"google.golang.org/appengine/aetest"
+	"google.golang.org/appengine/v2/aetest"
 	"testing"
 
 	. "github.com/ThePiachu/Go/Datastore"

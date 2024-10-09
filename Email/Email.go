@@ -7,7 +7,7 @@ package Email
 import (
 	"github.com/ThePiachu/Go/Log"
 	"golang.org/x/net/context"
-	"google.golang.org/appengine/mail"
+	"google.golang.org/appengine/v2/mail"
 )
 
 func SendHTMLEmail(c context.Context, subject string, to []string, sender string, mailBody string) error {
